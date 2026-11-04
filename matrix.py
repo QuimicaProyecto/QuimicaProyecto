@@ -73,3 +73,9 @@ class Matrix:
         temp=np.copy(self[i,:])
         self[i,:]=self[j,:]
         self[j,:]=temp
+
+    @classmethod
+    def zero_matrix(cls, rows, cols):
+        import numpy as np
+        # np.zeros genera una matriz llena de ceros
+        return cls(np.zeros((rows, cols)).tolist())

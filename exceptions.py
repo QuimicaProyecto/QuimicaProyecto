@@ -50,3 +50,5 @@ class InvalidRowIndexError(LinearAlgebraError):
 class ZeroMultiplicationError(LinearAlgebraError):
     def __init__(self, message="División o multiplicación por cero detectada."):
         super().__init__(message)
+
+DEFAULT_TOL = 1e-10

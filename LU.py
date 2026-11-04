@@ -1,6 +1,5 @@
 from matrix import Matrix
 from exceptions import Nonsquarematrixerror, IncompatibleDimensionsError, InvalidRowIndexError, ZeroMultiplicationError, SingularMatrixError
-from vector import Vector
 from dataclasses import dataclass
 import numpy as np
 
@@ -82,7 +81,7 @@ Raises:
     '''
 
     if A.cols != A.rows:
-        raise NonSquareMatrixError((A.rows,A.cols))
+        raise Nonsquarematrixerror((A.rows,A.cols))
 
     #Creating a copy of A
     U=A.copy()
@@ -130,47 +129,6 @@ Raises:
 
     return LUResults(L,U,P,num_swaps)
 
-def forward_substitution(L,b):
-
-    '''
-    
-    '''
-    
-    n=L.rows
-    c=Vector(np.zeros((n,1)))
-
-    for i in range(n):
-
-        dot_prod=Vector(L[i,:i]).dot_product(Vector(c[:i]))
-
-        c[i]=b[i]-dot_prod #b[i] is an raw array with shape (1,) it stills works due broadcasting
-
-    return c
-
-def back_substitution(U,c):
-
-    n=U.rows
-    x=Vector(np.zeros((n,1)))
-
-    for i in range(n-1,-1,-1):
-
-        dot_prod=Vector(U[i,i+1:]).dot_product(Vector(x[i+1:]))
-        diff=c[i]-dot_prod
-
-        if abs(U[i,i])<TOL:
-            raise SingularMatrixError()
-        else:
-            x[i]=diff/U[i,i]
-
-    return x
-
-def solve_system(A,b):
-    L,U,P,num_swaps=lu_decomposition(A)
-    Pb=Vector(P.data @ b.data) #Since we resolve the system LUx=Pb
-    c=forward_substitution(L,b)
-    x=back_substitution(U,c)
-
-    return x
 
 def determinant(A):
     # Calcula el determinante de una matriz cuadrada A usando la descomposición LU.

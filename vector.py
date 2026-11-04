@@ -1,5 +1,5 @@
 from matrix import Matrix
-from exceptions import VectorInvalidError, ZeroVectorError,IncompatibleDimensionsError
+from exceptions import VectorInvalidError, ZeroVectorError, IncompatibleDimensionsError
 import numpy as np
 
 class Vector(Matrix):
@@ -11,19 +11,21 @@ class Vector(Matrix):
             raise VectorInvalidError((self.rows, self.cols))
 
     def norm(self):
-        return float(np.sqrt(sum(self.data**2)))
+        # np.sum procesa el arreglo correctamente y .item() extrae el número puro
+        return np.sqrt(np.sum(np.array(self.data)**2)).item()
 
     def dot_product(self,vector_B):
         if self.rows!=vector_B.rows:
            raise IncompatibleDimensionsError("dot product", (self.rows, self.cols), (vector_B.rows, vector_B.cols))
-        return float(np.sum(self.data*vector_B.data))
+
+        return np.sum(np.array(self.data) * np.array(vector_B.data)).item()
 
     def normalization(self):
         n=self.norm()
         if n==0:
             raise ZeroVectorError()
-        return Vector(self.data/n)
+        # Mantenemos compatibilidad usando arreglos para la división
+        return Vector((np.array(self.data)/n).tolist())
 
     def __repr__(self):
         return f"Vector(\n{self.data}\n)"
-
